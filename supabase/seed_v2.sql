@@ -7,6 +7,15 @@
 -- ============================================================
 
 
+-- ── cleanup (safe to re-run) ─────────────────────────────
+DELETE FROM unit_items;
+DELETE FROM units;
+DELETE FROM articles WHERE id >= 5;
+DELETE FROM business_phrases WHERE id >= 6;
+DELETE FROM vocab WHERE id >= 17;
+DELETE FROM idioms WHERE id >= 7;
+DELETE FROM grammar WHERE id >= 7;
+
 -- ── grammar (IDs 7–12) ────────────────────────────────────
 INSERT INTO grammar (pattern, meaning, level, example, translation, usage, similar_patterns, practice, answer) VALUES
 (
