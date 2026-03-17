@@ -4,12 +4,20 @@ import { shuffleArray } from "@/data/quiz";
 import { useAppData } from "@/lib/app-data";
 import { useAuth } from "@/lib/auth";
 import { saveUnitScore } from "@/lib/progress";
+import { supabase } from "@/lib/supabase";
 
 // Helper to call our API route instead of Anthropic directly
 async function callAI(prompt: string) {
+  // Get the current session token to authenticate the request
+  const { data: { session } } = await supabase.auth.getSession();
+  const token = session?.access_token;
+
   const res = await fetch("/api/ai", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
     body: JSON.stringify({ prompt }),
   });
   const data = await res.json();
