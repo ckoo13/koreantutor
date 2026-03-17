@@ -19,7 +19,7 @@ export async function GET() {
       example: r.example,
       translation: r.translation,
       usage: r.usage,
-      similar: r.similar || [],
+      similar: r.similar_patterns || [],
       practice: r.practice,
       answer: r.answer,
     }));
