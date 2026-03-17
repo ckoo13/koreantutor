@@ -9,7 +9,7 @@
 
 -- ── cleanup (safe to re-run) ─────────────────────────────
 DELETE FROM unit_items;
-DELETE FROM units;
+TRUNCATE units RESTART IDENTITY CASCADE;
 DELETE FROM articles WHERE id >= 5;
 DELETE FROM business_phrases WHERE id >= 6;
 DELETE FROM vocab WHERE id >= 17;
