@@ -461,8 +461,8 @@ INSERT INTO unit_items (unit_id, item_type, item_id) VALUES
 (1, 'idiom', 4),
 (1, 'idiom', 5),
 -- business: 미팅 요청(1), 실적 보고(2)
-(1, 'business_phrase', 1),
-(1, 'business_phrase', 2),
+(1, 'business', 1),
+(1, 'business', 2),
 -- article: PE 차입매수(1), 밸류에이션(5)
 (1, 'article', 1),
 (1, 'article', 5);
@@ -488,9 +488,9 @@ INSERT INTO unit_items (unit_id, item_type, item_id) VALUES
 (2, 'idiom', 2),
 (2, 'idiom', 8),
 -- business: 협상 양보(3), 정중한 거절(4), 리스크 보고(7)
-(2, 'business_phrase', 3),
-(2, 'business_phrase', 4),
-(2, 'business_phrase', 7),
+(2, 'business', 3),
+(2, 'business', 4),
+(2, 'business', 7),
 -- article: 청년 실업(2), ESG(6)
 (2, 'article', 2),
 (2, 'article', 6);
@@ -516,8 +516,8 @@ INSERT INTO unit_items (unit_id, item_type, item_id) VALUES
 (3, 'idiom', 10),
 (3, 'idiom', 7),
 -- business: 후속 조치(5), IR 미팅(8)
-(3, 'business_phrase', 5),
-(3, 'business_phrase', 8),
+(3, 'business', 5),
+(3, 'business', 8),
 -- article: AI 산업(3)
 (3, 'article', 3);
 
@@ -542,8 +542,8 @@ INSERT INTO unit_items (unit_id, item_type, item_id) VALUES
 (4, 'idiom', 11),
 (4, 'idiom', 12),
 -- business: 감사 인사(6), 계약 조건(9), 회의 조정(10)
-(4, 'business_phrase', 6),
-(4, 'business_phrase', 9),
-(4, 'business_phrase', 10),
+(4, 'business', 6),
+(4, 'business', 9),
+(4, 'business', 10),
 -- article: 한류(4)
 (4, 'article', 4);
