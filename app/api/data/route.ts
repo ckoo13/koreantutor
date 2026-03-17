@@ -3,13 +3,15 @@ import { supabase } from "@/lib/supabase";
 
 export async function GET() {
   try {
-    const [grammar, idioms, business, vocab, articles, quiz] = await Promise.all([
+    const [grammar, idioms, business, vocab, articles, quiz, units, unitItems] = await Promise.all([
       supabase.from("grammar").select("*").order("id"),
       supabase.from("idioms").select("*").order("id"),
       supabase.from("business_phrases").select("*").order("id"),
       supabase.from("vocab").select("*").order("id"),
       supabase.from("articles").select("*").order("id"),
       supabase.from("quiz_questions").select("*").order("id"),
+      supabase.from("units").select("*").order("unit_number"),
+      supabase.from("unit_items").select("*").order("id"),
     ]);
 
     const grammarData = (grammar.data || []).map((r) => ({
@@ -88,6 +90,8 @@ export async function GET() {
       vocabCategories,
       articleData,
       quizPool,
+      units: units.data || [],
+      unitItems: unitItems.data || [],
     });
   } catch {
     return NextResponse.json({});
