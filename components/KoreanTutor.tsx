@@ -1424,6 +1424,7 @@ function QuizMode() {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
   const [aiQuestions, setAiQuestions] = useState([]);
   const [wrongOnes, setWrongOnes] = useState([]);
 
@@ -1462,6 +1463,7 @@ function QuizMode() {
 
   const generateAI = async () => {
     setAiLoading(true);
+    setAiError(null);
     try {
       const topicHint = catFilter === "전체"
         ? "고급 한국어 문법, 사자성어, 비즈니스 한국어, 고급 어휘 (한자어, 고유어, 금융용어, 시사용어)"
@@ -1473,8 +1475,9 @@ function QuizMode() {
 
 JSON 배열만 출력하세요. 마크다운이나 다른 텍스트는 절대 포함하지 마세요.`);
       setAiQuestions(parsed);
-    } catch (err) {
+    } catch (err: any) {
       console.error("AI generation failed:", err);
+      setAiError(err.message || "AI 생성 실패");
       setAiQuestions([]);
     }
     setAiLoading(false);
@@ -1576,6 +1579,14 @@ JSON 배열만 출력하세요. 마크다운이나 다른 텍스트는 절대 �
               {aiLoading ? "⏳ AI 생성 중..." : "🤖 AI 문제 추가 생성"}
             </button>
           </div>
+
+          {aiError && (
+            <div style={{ marginTop: 16 }}>
+              <p style={{ fontFamily: font.body, fontSize: 13, color: palette.incorrect, margin: 0 }}>
+                ❌ AI 오류: {aiError}
+              </p>
+            </div>
+          )}
 
           {aiQuestions.length > 0 && (
             <div style={{ marginTop: 16, animation: "fadeIn 0.3s ease" }}>
