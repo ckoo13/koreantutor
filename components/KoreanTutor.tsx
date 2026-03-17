@@ -1,11 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { GRAMMAR_DATA } from "@/data/grammar";
-import { IDIOM_DATA } from "@/data/idioms";
-import { BUSINESS_DATA } from "@/data/business";
-import { VOCAB_CATEGORIES, VOCAB_DATA } from "@/data/vocab";
-import { ARTICLE_DATA } from "@/data/articles";
-import { QUIZ_POOL, shuffleArray } from "@/data/quiz";
+import { shuffleArray } from "@/data/quiz";
+import { useAppData } from "@/lib/app-data";
 
 // Helper to call our API route instead of Anthropic directly
 async function callAI(prompt: string) {
@@ -118,13 +114,14 @@ function NavButton({ label, icon, active, onClick }) {
 
 // ── Home Screen ────────────────────────────────────────────────────
 function HomeScreen({ setMode }) {
+  const { grammarData, idiomData, businessData, vocabData, articleData, quizPool } = useAppData();
   const cards = [
-    { mode: MODES.GRAMMAR, icon: "文", title: "고급 문법", subtitle: "Advanced Grammar Patterns", count: GRAMMAR_DATA.length },
-    { mode: MODES.IDIOMS, icon: "漢", title: "사자성어", subtitle: "Four-Character Idioms", count: IDIOM_DATA.length },
-    { mode: MODES.BUSINESS, icon: "業", title: "비즈니스 한국어", subtitle: "Business & Formal Register", count: BUSINESS_DATA.length },
-    { mode: MODES.VOCAB, icon: "語", title: "어휘력", subtitle: "Vocabulary Builder", count: VOCAB_DATA.length },
-    { mode: MODES.READING, icon: "讀", title: "읽기·쓰기", subtitle: "Reading & Writing Practice", count: ARTICLE_DATA.length },
-    { mode: MODES.QUIZ, icon: "試", title: "종합 퀴즈", subtitle: "Mixed Review Quiz", count: QUIZ_POOL.length },
+    { mode: MODES.GRAMMAR, icon: "文", title: "고급 문법", subtitle: "Advanced Grammar Patterns", count: grammarData.length },
+    { mode: MODES.IDIOMS, icon: "漢", title: "사자성어", subtitle: "Four-Character Idioms", count: idiomData.length },
+    { mode: MODES.BUSINESS, icon: "業", title: "비즈니스 한국어", subtitle: "Business & Formal Register", count: businessData.length },
+    { mode: MODES.VOCAB, icon: "語", title: "어휘력", subtitle: "Vocabulary Builder", count: vocabData.length },
+    { mode: MODES.READING, icon: "讀", title: "읽기·쓰기", subtitle: "Reading & Writing Practice", count: articleData.length },
+    { mode: MODES.QUIZ, icon: "試", title: "종합 퀴즈", subtitle: "Mixed Review Quiz", count: quizPool.length },
   ];
 
   return (
@@ -227,14 +224,15 @@ function HomeScreen({ setMode }) {
 
 // ── Grammar Mode ───────────────────────────────────────────────────
 function GrammarMode() {
+  const { grammarData } = useAppData();
   const [idx, setIdx] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const item = GRAMMAR_DATA[idx];
+  const item = grammarData[idx];
 
   return (
     <div style={{ maxWidth: 600, margin: "0 auto", animation: "fadeIn 0.5s ease" }}>
-      <ProgressDots total={GRAMMAR_DATA.length} current={idx} />
+      <ProgressDots total={grammarData.length} current={idx} />
 
       <div
         style={{
@@ -248,7 +246,7 @@ function GrammarMode() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
           <Tag>{item.level}</Tag>
           <span style={{ fontFamily: font.mono, fontSize: 12, color: palette.textDim }}>
-            {idx + 1}/{GRAMMAR_DATA.length}
+            {idx + 1}/{grammarData.length}
           </span>
         </div>
 
@@ -357,15 +355,15 @@ function GrammarMode() {
           ← 이전
         </button>
         <button
-          onClick={() => { setIdx(Math.min(GRAMMAR_DATA.length - 1, idx + 1)); setShowAnswer(false); setExpanded(false); }}
-          disabled={idx === GRAMMAR_DATA.length - 1}
+          onClick={() => { setIdx(Math.min(grammarData.length - 1, idx + 1)); setShowAnswer(false); setExpanded(false); }}
+          disabled={idx === grammarData.length - 1}
           style={{
-            background: idx === GRAMMAR_DATA.length - 1 ? palette.border : palette.accent,
+            background: idx === grammarData.length - 1 ? palette.border : palette.accent,
             border: "none",
-            color: idx === GRAMMAR_DATA.length - 1 ? palette.textDim : palette.bg,
+            color: idx === grammarData.length - 1 ? palette.textDim : palette.bg,
             padding: "10px 24px",
             borderRadius: 8,
-            cursor: idx === GRAMMAR_DATA.length - 1 ? "default" : "pointer",
+            cursor: idx === grammarData.length - 1 ? "default" : "pointer",
             fontFamily: font.body,
             fontSize: 14,
             fontWeight: 600,
@@ -380,13 +378,14 @@ function GrammarMode() {
 
 // ── Idiom Mode ─────────────────────────────────────────────────────
 function IdiomMode() {
+  const { idiomData } = useAppData();
   const [idx, setIdx] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const item = IDIOM_DATA[idx];
+  const item = idiomData[idx];
 
   return (
     <div style={{ maxWidth: 600, margin: "0 auto", animation: "fadeIn 0.5s ease" }}>
-      <ProgressDots total={IDIOM_DATA.length} current={idx} />
+      <ProgressDots total={idiomData.length} current={idx} />
 
       <div
         onClick={() => setFlipped(!flipped)}
@@ -469,15 +468,15 @@ function IdiomMode() {
           ← 이전
         </button>
         <button
-          onClick={() => { setIdx(Math.min(IDIOM_DATA.length - 1, idx + 1)); setFlipped(false); }}
-          disabled={idx === IDIOM_DATA.length - 1}
+          onClick={() => { setIdx(Math.min(idiomData.length - 1, idx + 1)); setFlipped(false); }}
+          disabled={idx === idiomData.length - 1}
           style={{
-            background: idx === IDIOM_DATA.length - 1 ? palette.border : palette.accent,
+            background: idx === idiomData.length - 1 ? palette.border : palette.accent,
             border: "none",
-            color: idx === IDIOM_DATA.length - 1 ? palette.textDim : palette.bg,
+            color: idx === idiomData.length - 1 ? palette.textDim : palette.bg,
             padding: "10px 24px",
             borderRadius: 8,
-            cursor: idx === IDIOM_DATA.length - 1 ? "default" : "pointer",
+            cursor: idx === idiomData.length - 1 ? "default" : "pointer",
             fontFamily: font.body,
             fontSize: 14,
             fontWeight: 600,
@@ -492,13 +491,14 @@ function IdiomMode() {
 
 // ── Business Mode ──────────────────────────────────────────────────
 function BusinessMode() {
+  const { businessData } = useAppData();
   const [idx, setIdx] = useState(0);
   const [showCasual, setShowCasual] = useState(false);
-  const item = BUSINESS_DATA[idx];
+  const item = businessData[idx];
 
   return (
     <div style={{ maxWidth: 600, margin: "0 auto", animation: "fadeIn 0.5s ease" }}>
-      <ProgressDots total={BUSINESS_DATA.length} current={idx} />
+      <ProgressDots total={businessData.length} current={idx} />
 
       <div
         style={{
@@ -512,7 +512,7 @@ function BusinessMode() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
           <Tag>{item.register}</Tag>
           <span style={{ fontFamily: font.mono, fontSize: 12, color: palette.textDim }}>
-            {idx + 1}/{BUSINESS_DATA.length}
+            {idx + 1}/{businessData.length}
           </span>
         </div>
 
@@ -595,15 +595,15 @@ function BusinessMode() {
           ← 이전
         </button>
         <button
-          onClick={() => { setIdx(Math.min(BUSINESS_DATA.length - 1, idx + 1)); setShowCasual(false); }}
-          disabled={idx === BUSINESS_DATA.length - 1}
+          onClick={() => { setIdx(Math.min(businessData.length - 1, idx + 1)); setShowCasual(false); }}
+          disabled={idx === businessData.length - 1}
           style={{
-            background: idx === BUSINESS_DATA.length - 1 ? palette.border : palette.accent,
+            background: idx === businessData.length - 1 ? palette.border : palette.accent,
             border: "none",
-            color: idx === BUSINESS_DATA.length - 1 ? palette.textDim : palette.bg,
+            color: idx === businessData.length - 1 ? palette.textDim : palette.bg,
             padding: "10px 24px",
             borderRadius: 8,
-            cursor: idx === BUSINESS_DATA.length - 1 ? "default" : "pointer",
+            cursor: idx === businessData.length - 1 ? "default" : "pointer",
             fontFamily: font.body,
             fontSize: 14,
             fontWeight: 600,
@@ -618,6 +618,7 @@ function BusinessMode() {
 
 // ── Vocab Mode ─────────────────────────────────────────────────────
 function VocabMode() {
+  const { vocabData, vocabCategories } = useAppData();
   const [catFilter, setCatFilter] = useState("all");
   const [idx, setIdx] = useState(0);
   const [practiceMode, setPracticeMode] = useState("study"); // study | cloze | synonym
@@ -625,7 +626,7 @@ function VocabMode() {
   const [synAnswer, setSynAnswer] = useState(null);
   const [expanded, setExpanded] = useState(false);
 
-  const filtered = catFilter === "all" ? VOCAB_DATA : VOCAB_DATA.filter((v) => v.category === catFilter);
+  const filtered = catFilter === "all" ? vocabData : vocabData.filter((v) => v.category === catFilter);
   const item = filtered[idx] || filtered[0];
 
   const resetCard = () => { setShowAnswer(false); setSynAnswer(null); setExpanded(false); };
@@ -638,7 +639,7 @@ function VocabMode() {
   const getSynonymOptions = () => {
     if (!item) return [];
     const correct = item.synonyms[0];
-    const allWords = VOCAB_DATA.filter((v) => v.word !== item.word).map((v) => v.word);
+    const allWords = vocabData.filter((v) => v.word !== item.word).map((v) => v.word);
     const distractors = allWords.sort(() => Math.random() - 0.5).slice(0, 3);
     const options = [correct, ...distractors].sort(() => Math.random() - 0.5);
     return options;
@@ -647,22 +648,22 @@ function VocabMode() {
   const [synOptions] = useState(() => {
     // Pre-generate for each card
     const map = {};
-    VOCAB_DATA.forEach((v, i) => {
+    vocabData.forEach((v, i) => {
       const correct = v.synonyms[0];
-      const others = VOCAB_DATA.filter((x) => x.word !== v.word).map((x) => x.word);
+      const others = vocabData.filter((x) => x.word !== v.word).map((x) => x.word);
       const picks = others.sort(() => Math.random() - 0.5).slice(0, 3);
       map[i] = [correct, ...picks].sort(() => Math.random() - 0.5);
     });
     return map;
   });
 
-  const globalIdx = VOCAB_DATA.indexOf(item);
+  const globalIdx = vocabData.indexOf(item);
 
   return (
     <div style={{ maxWidth: 620, margin: "0 auto", animation: "fadeIn 0.5s ease" }}>
       {/* Category filter tabs */}
       <div style={{ display: "flex", gap: 6, justifyContent: "center", flexWrap: "wrap", marginBottom: 12 }}>
-        {[{ key: "all", label: "전체" }, ...Object.entries(VOCAB_CATEGORIES).map(([k, v]) => ({ key: v, label: v }))].map((c) => (
+        {[{ key: "all", label: "전체" }, ...Object.entries(vocabCategories).map(([k, v]) => ({ key: v, label: v }))].map((c) => (
           <button
             key={c.key}
             onClick={() => setCatFilter(c.key)}
@@ -946,6 +947,7 @@ function VocabMode() {
 
 // ── Reading/Writing Mode ───────────────────────────────────────────
 function ReadingMode() {
+  const { articleData, vocabData } = useAppData();
   const PHASES = { SELECT: "select", READ: "read", SHORT: "short", WRITE: "write", FEEDBACK: "feedback" };
 
   const [phase, setPhase] = useState(PHASES.SELECT);
@@ -965,7 +967,7 @@ function ReadingMode() {
   const generateAiArticle = async (topic) => {
     setAiLoading(true);
     try {
-      const vocabList = VOCAB_DATA.map((v) => v.word).join(", ");
+      const vocabList = vocabData.map((v) => v.word).join(", ");
       const parsed = await callAI(`TOPIK 5-6급 수준의 한국어 기사를 JSON으로 생성하세요. 주제: ${topic}. PE(사모펀드) 종사자에게 유용한 맥락을 포함하세요.
 
 다음 어휘를 최소 6개 이상 자연스럽게 포함하세요: ${vocabList}
@@ -1030,7 +1032,7 @@ ${writingText}
         <div style={{ background: palette.surface, border: `1px solid ${palette.border}`, borderRadius: 14, padding: 28, marginBottom: 20 }}>
           <p style={{ fontFamily: font.body, fontSize: 13, color: palette.accentDim, margin: "0 0 16px 0" }}>📰 준비된 기사 선택</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {ARTICLE_DATA.map((a) => (
+            {articleData.map((a) => (
               <button
                 key={a.id}
                 onClick={() => { setArticle(a); setAiArticle(null); setPhase(PHASES.READ); }}
@@ -1412,6 +1414,7 @@ ${writingText}
 
 // ── Quiz Mode ──────────────────────────────────────────────────────
 function QuizMode() {
+  const { quizPool } = useAppData();
   const QUIZ_SIZES = [10, 15, 20];
   const CATS = ["전체", "문법", "사자성어", "비즈니스", "어휘"];
 
@@ -1429,7 +1432,7 @@ function QuizMode() {
   const [wrongOnes, setWrongOnes] = useState([]);
 
   const startQuiz = (extraQs?) => {
-    const pool = catFilter === "전체" ? QUIZ_POOL : QUIZ_POOL.filter((q) => q.cat === catFilter);
+    const pool = catFilter === "전체" ? quizPool : quizPool.filter((q) => q.cat === catFilter);
     const shuffled = shuffleArray(pool).slice(0, quizSize);
     const combined = extraQs ? [...shuffled, ...extraQs] : shuffled;
     setQuestions(combined);
@@ -1539,7 +1542,7 @@ JSON 배열만 출력하세요. 마크다운이나 다른 텍스트는 절대 �
           </div>
 
           <p style={{ fontFamily: font.body, fontSize: 12, color: palette.textDim, margin: "0 0 20px 0" }}>
-            {catFilter === "전체" ? QUIZ_POOL.length : QUIZ_POOL.filter((q) => q.cat === catFilter).length}개 문제 풀에서 랜덤 출제됩니다
+            {catFilter === "전체" ? quizPool.length : quizPool.filter((q) => q.cat === catFilter).length}개 문제 풀에서 랜덤 출제됩니다
           </p>
 
           <div style={{ display: "flex", gap: 10 }}>
