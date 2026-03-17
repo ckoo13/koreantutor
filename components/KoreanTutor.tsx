@@ -1427,7 +1427,7 @@ function QuizMode() {
   const [aiQuestions, setAiQuestions] = useState([]);
   const [wrongOnes, setWrongOnes] = useState([]);
 
-  const startQuiz = (extraQs) => {
+  const startQuiz = (extraQs?) => {
     const pool = catFilter === "전체" ? QUIZ_POOL : QUIZ_POOL.filter((q) => q.cat === catFilter);
     const shuffled = shuffleArray(pool).slice(0, quizSize);
     const combined = extraQs ? [...shuffled, ...extraQs] : shuffled;
